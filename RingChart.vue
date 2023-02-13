@@ -1,5 +1,5 @@
 <template>
-    <div id="main"></div>
+    <div :id="id"></div>
 </template>
 
 <script>
@@ -10,6 +10,22 @@ export default {
     props: {
       'data':{
         type: Array
+      },
+      'id': {
+        type: String,
+        default: 'main'
+      },
+      'title': {
+        type: String,
+        default: '提案類型統計'
+      },
+      'colors': {
+        type: Array,
+        default: ['#0a53a8','#215a6c','#e6e6e6','#e7e7e7','#e8eaed']
+      },
+      'labelFormat': {
+        type: String,
+        default: '{c}'
       }
     },
 	watch:{
@@ -22,12 +38,11 @@ export default {
 	},
     methods: {
       updateChart(){
-        var myChart = echarts.init(document.getElementById('main'));
+        var myChart = echarts.init(document.getElementById(this.id));
         let rawData = toRaw(this.data);
-		console.log(rawData);
         let option = {
           title: {
-            text: '專案進度追蹤',
+            text: this.title,
             left: 'center',
             top: 'center',
 			textStyle: {fontSize: 24}
@@ -35,10 +50,10 @@ export default {
           series: [
             {
               type: 'pie',
-              color: ['#B5B5B6','#FFF362','#E1893F','#6DA1C8','#73B284','#DD776A'],
+              color: this.colors,
               data: rawData,
               radius: ['60%', '70%'],
-              label: {formatter: '{b}: {c}',fontSize: 16},
+              label: {formatter: `{b}: ${this.labelFormat}`,fontSize: 16},
 			  colorBy: 'data',
             }
           ],
